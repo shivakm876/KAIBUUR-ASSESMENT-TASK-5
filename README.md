@@ -1,4 +1,4 @@
-#consumer Complaint Text Classification
+consumer Complaint Text Classification
 Project Overview
 
 This project focuses on text classification of consumer complaints submitted to financial institutions. The goal is to automatically categorize complaint texts into their corresponding financial category, enabling faster processing and better customer service.
