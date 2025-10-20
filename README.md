@@ -1,9 +1,10 @@
-consumer Complaint Text Classification
-Project Overview
+🏦 Consumer Complaint Text Classification
 
-This project focuses on text classification of consumer complaints submitted to financial institutions. The goal is to automatically categorize complaint texts into their corresponding financial category, enabling faster processing and better customer service.
+💡 Project Overview
 
-Categories:
+This project is a text classification pipeline for consumer complaints submitted to financial institutions. It automatically classifies complaint texts into their respective financial categories, helping organizations improve response times and streamline operations.
+
+Key Categories:
 
 Label	Category
 0	Credit reporting, credit repair, or other
@@ -11,96 +12,95 @@ Label	Category
 2	Consumer Loan
 3	Mortgage
 
-The project demonstrates data preprocessing, feature engineering, multiple classification models, and model comparison.
+Goal: Compare multiple machine learning models and find the best performing one for text classification.
 
-Dataset
+🛠️ Technologies Used
 
-Source: Consumer Complaint Database - data.gov
+Python 3.12
 
-Main columns used:
+Pandas, NumPy – Data manipulation
 
-Text – consumer complaint content
+NLTK – Text preprocessing (tokenization, stopword removal, lemmatization)
 
-Category – complaint type (target variable)
+Scikit-learn – Feature extraction, model training, evaluation
 
-Steps Performed
+Matplotlib & Seaborn – Data visualization
 
-Data Loading & Exploration
+📂 Dataset
 
-Extracted and loaded the CSV file from a ZIP.
+Source: Consumer Complaint Database
 
-Checked for missing values.
+Columns Used:
 
-Computed basic statistics: number of characters, words, and sentences per complaint.
+Text – Consumer complaint text
 
-Text Cleaning & Preprocessing
+Category – Complaint type (target variable)
 
-Lowercasing and removing non-alphabetic characters.
+🧹 Data Preprocessing
 
-Tokenization.
+Text Cleaning: Remove non-alphabetic characters, lowercase conversion.
 
-Stopword removal.
+Tokenization: Split text into words.
 
-Lemmatization.
+Stopword Removal: Remove common English stopwords.
 
-Feature Engineering
+Lemmatization: Convert words to their base form.
 
-Created a corpus from lemmatized tokens.
+Feature Engineering: TF-IDF vectorization (optionally combined with Bag-of-Words for Logistic Regression).
 
-Vectorized text using TF-IDF and optionally combined with Bag-of-Words (BOW) for Logistic Regression.
-
-Train-Test Split
+⚙️ Train-Test Split
 
 Stratified 80/20 split to maintain category distribution.
 
-Ensured no data leakage between train and test sets.
+Ensures no data leakage between training and testing datasets.
 
-Model Building
-Trained the following models:
+🤖 Models Implemented
+
+Linear Support Vector Machine (SVM) – Best performer ✅
 
 Naive Bayes (MultinomialNB)
 
-Linear SVM (LinearSVC) – best performing model
+Random Forest Classifier
 
-Random Forest (RandomForestClassifier)
+Logistic Regression (with combined TF-IDF + BOW features)
 
-Logistic Regression (with FeatureUnion of BOW + TF-IDF)
-
-Model Evaluation
-
-Accuracy score
-
-Classification report (precision, recall, F1-score)
-
-Confusion matrix
-
-ROC curves (One-vs-Rest)
-
-Comparison of all models using bar charts
-
-Results
+📊 Results
 Model	Accuracy
-Linear SVM	0.9904 ✅
+Linear SVM	0.9904
 Naive Bayes	0.9816
 Random Forest	0.9626
 Logistic Regression	0.9626
 
-Linear SVM performed best, combining high accuracy with efficient training time on the dataset.
+Observation: Linear SVM achieved the highest accuracy while being computationally efficient.
 
-How to Run
+📈 Visualizations
+
+Confusion Matrices: Check per-class performance.
+
+ROC Curves: One-vs-Rest evaluation for multi-class classification.
+
+Accuracy Comparison Bar Chart: Visual comparison of all models.
+
+🏃 How to Run
+
+Clone repository:
+
+git clone https://github.com/yourusername/consumer-complaint-classification.git
+cd consumer-complaint-classification
+
 
 Install dependencies:
 
 pip install pandas numpy scikit-learn nltk matplotlib seaborn
 
 
-Load the dataset:
+Load dataset:
 
 import pandas as pd
 df = pd.read_csv('Consumer_Complaints.csv')
 
 
-Preprocess text:
+Run preprocessing pipeline:
 
 # Clean, tokenize, remove stopwords, lemmatize
 df['Clean_Text'] = df['Text'].apply(clean_function)
@@ -109,7 +109,7 @@ df['Nostopword_Text'] = df['Tokenize_Text'].apply(remove_stopwords)
 df['Lemmatized_Text'] = df['Nostopword_Text'].apply(lemmatize_function)
 
 
-Train-test split:
+Train-Test Split:
 
 from sklearn.model_selection import train_test_split
 X = [' '.join(tokens) for tokens in df['Lemmatized_Text']]
@@ -119,12 +119,12 @@ X_train, X_test, y_train, y_test = train_test_split(
 )
 
 
-Train models:
+Train and evaluate models (Example: Linear SVM):
 
-# Example: Linear SVM
 from sklearn.pipeline import Pipeline
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.svm import LinearSVC
+from sklearn.metrics import accuracy_score, classification_report
 
 pipeline_svm = Pipeline([
     ('tfidf', TfidfVectorizer(max_df=0.8, min_df=10, max_features=2000)),
@@ -133,10 +133,6 @@ pipeline_svm = Pipeline([
 pipeline_svm.fit(X_train, y_train)
 y_pred_svm = pipeline_svm.predict(X_test)
 
-
-Evaluate models:
-
-from sklearn.metrics import accuracy_score, classification_report
 print("Linear SVM Accuracy:", accuracy_score(y_test, y_pred_svm))
 print(classification_report(y_test, y_pred_svm))
 
@@ -144,20 +140,35 @@ print(classification_report(y_test, y_pred_svm))
 Compare all models:
 
 import matplotlib.pyplot as plt
+
 models = ["Random Forest", "Linear SVM", "Naive Bayes", "Logistic Regression"]
 accuracies = [accuracy_rf, accuracy_svm, accuracy_nb, accuracy_lr]
 
 plt.figure(figsize=(10,6))
-plt.bar(models, accuracies, color=['purple','blue','green','red'])
+colors = ['purple', 'blue', 'green', 'red']
+plt.bar(models, accuracies, color=colors)
 plt.title("Model Accuracy Comparison")
 plt.ylabel("Accuracy")
 plt.ylim(0,1)
 plt.show()
 
-Notes
+⚡ Key Takeaways
 
-Linear SVM is recommended for large text datasets because it offers fast training and high accuracy.
+Linear SVM: Fast training, high accuracy – best choice for large text datasets.
 
-Random Forest can be slow with high-dimensional TF-IDF features.
+Random Forest: Works but slower for high-dimensional TF-IDF features.
 
-Naive Bayes is fast and simple but slightly less accurate than SVM or Logistic Regression.
+Naive Bayes: Simple and fast, slightly lower accuracy.
+
+Logistic Regression: Good performance, benefits from combining BOW + TF-IDF.
+
+📖 References
+
+Consumer Complaint Database - data.gov
+
+Scikit-learn Documentation
+
+NLTK Documentation
+
+✅ Project Status: Complete
+🏆 Best Model: Linear SVM (Accuracy 0.9904)
